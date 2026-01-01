@@ -1,18 +1,40 @@
+"""
+Count files by extension inside a directory.
+
+This script scans a directory and counts how many files
+exist for each extension type.
+"""
+import argparse
 import os
-f = os.listdir('FILES')
-x = 0
-y = 0
-z = 0
+parser = argparse.ArgumentParser(
+    description="Count files by extension inside a directory"
+)
+parser.add_argument(
+    "directory",
+    help="Path to the directory to scan"
+)
+args = parser.parse_args()
+DIRECTORY = args.directory
+if not os.path.isdir(DIRECTORY):
+    print(f"Error: '{DIRECTORY}' is not a valid directory")
+    exit(1)
+files = os.listdir(DIRECTORY)
+txt_count = 0
+csv_count = 0
+other_count = 0
 
 
-for file in f:
-    if file.endswith('.txt'):
-        x += 1
+for file in files:
+    source = os.path.join(DIRECTORY, file)
+    # Skip directories
+    if os.path.isdir(source):
+        continue
+    elif file.endswith('.txt'):
+        txt_count += 1
     elif file.endswith('.csv'):
-        y += 1
+        csv_count += 1
     else:
-        z += 1
-
-print (f'Number of .txt files: {x}')
-print (f'Number of .csv files: {y}')
-print (f'Number of other files: {z}')
+        other_count += 1
+print(f"Number of .txt files: {txt_count}")
+print(f"Number of .csv files: {csv_count}")
+print(f"Number of other files: {other_count}")
